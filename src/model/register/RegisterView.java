@@ -1,21 +1,22 @@
-package model.login;
+package model.register;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import model.register.RegisterController;
-import model.register.RegisterView;
 
-public class LoginView extends JFrame {
+public class RegisterView extends JFrame {
 
+    private JTextField txtNamaPanjang;
     private JTextField txtUsername;
     private JPasswordField txtPassword;
-    private JButton btnLogin;
+    private JPasswordField txtConfirmPassword;
+    private JButton btnRegister;
     private JButton btnCancel;
     private JLabel lblStatus;
     private JCheckBox chkShowPassword;
 
+    // Warna yang sama persis dengan LoginView
     private static final Color BG_MAIN      = new Color(15, 15, 20);
     private static final Color BG_CARD      = new Color(28, 28, 40);
     private static final Color BG_INPUT     = new Color(32, 32, 45);
@@ -26,10 +27,10 @@ public class LoginView extends JFrame {
     private static final Color BTN_HOVER    = new Color(60, 60, 82);
     private static final Color ACCENT       = new Color(220, 50, 100);
 
-    public LoginView() {
-        setTitle("Login — POS Bengkel");
+    public RegisterView() {
+        setTitle("Register — POS Bengkel");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setUndecorated(true);
+        setUndecorated(true); // Tampilan tanpa bingkai OS
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(screen.width, screen.height);
@@ -39,15 +40,12 @@ public class LoginView extends JFrame {
     }
 
     private void initUI() {
-
-        btnCancel = new JButton();
-        btnCancel.setVisible(false);
         chkShowPassword = new JCheckBox();
         chkShowPassword.setVisible(false);
         lblStatus = new JLabel(" ");
         lblStatus.setFont(new Font("SansSerif", Font.PLAIN, 13));
 
-        // ===== CARD =====
+        // ===== CARD (Dibuat lebih tinggi untuk menampung input tambahan) =====
         JPanel card = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -58,10 +56,10 @@ public class LoginView extends JFrame {
             }
         };
         card.setOpaque(false);
-        card.setPreferredSize(new Dimension(460, 480));
+        card.setPreferredSize(new Dimension(460, 650)); // Card lebih tinggi
         card.setLayout(new GridBagLayout());
 
-        // ===== FORM PANEL (semua di tengah) =====
+        // ===== FORM PANEL =====
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setOpaque(false);
@@ -73,80 +71,44 @@ public class LoginView extends JFrame {
         topBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 24));
         topBar.add(makeCloseButton());
 
-        // ----- Judul (CENTER) -----
-        JLabel lblTitle = new JLabel("Welcome back!", SwingConstants.CENTER);
+        // ----- Judul -----
+        JLabel lblTitle = new JLabel("Create Account", SwingConstants.CENTER);
         lblTitle.setFont(new Font("SansSerif", Font.BOLD, 32));
         lblTitle.setForeground(TEXT_WHITE);
         lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 
-        JLabel lblSub = new JLabel("Please sign in to access your account", SwingConstants.CENTER);
+        JLabel lblSub = new JLabel("Sign up to get started", SwingConstants.CENTER);
         lblSub.setFont(new Font("SansSerif", Font.PLAIN, 14));
         lblSub.setForeground(TEXT_GRAY);
         lblSub.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblSub.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
+        // ----- Nama Panjang -----
+        JLabel lblNama = makeCenterLabel("Full Name");
+        txtNamaPanjang = new JTextField();
+        styleTextField(txtNamaPanjang, "Enter your full name");
+
         // ----- Username -----
         JLabel lblUser = makeCenterLabel("Username");
         txtUsername = new JTextField();
-        styleTextField(txtUsername, "Enter your username or email");
+        styleTextField(txtUsername, "Choose a username");
 
         // ----- Password -----
         JLabel lblPass = makeCenterLabel("Password");
         txtPassword = new JPasswordField();
-        txtPassword.setEchoChar('●');
+        JPanel passPanel = createPasswordPanel(txtPassword);
 
-        JPanel passPanel = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(BG_INPUT);
-                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8);
-                g2.setColor(BORDER_INPUT);
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8);
-            }
-        };
-        passPanel.setOpaque(false);
-        passPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
-        passPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        txtPassword.setOpaque(false);
-        txtPassword.setForeground(TEXT_WHITE);
-        txtPassword.setCaretColor(ACCENT);
-        txtPassword.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        txtPassword.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 0));
-
-        JButton btnEye = new JButton("👁") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setColor(BG_INPUT);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        btnEye.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        btnEye.setForeground(TEXT_GRAY);
-        btnEye.setContentAreaFilled(false);
-        btnEye.setBorderPainted(false);
-        btnEye.setFocusPainted(false);
-        btnEye.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnEye.setPreferredSize(new Dimension(44, 46));
-        btnEye.addActionListener(e -> {
-            boolean show = txtPassword.getEchoChar() == '\0';
-            txtPassword.setEchoChar(show ? '●' : '\0');
-        });
-
-        passPanel.add(txtPassword, BorderLayout.CENTER);
-        passPanel.add(btnEye, BorderLayout.EAST);
+        // ----- Konfirmasi Password -----
+        JLabel lblConfirmPass = makeCenterLabel("Confirm Password");
+        txtConfirmPassword = new JPasswordField();
+        JPanel confirmPassPanel = createPasswordPanel(txtConfirmPassword);
 
         // ----- Status -----
         lblStatus.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ----- Tombol Login -----
-        btnLogin = new JButton("Login") {
+        // ----- Tombol Register -----
+        btnRegister = new JButton("Sign Up") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -156,50 +118,32 @@ public class LoginView extends JFrame {
                 } else if (getModel().isRollover()) {
                     g2.setColor(BTN_HOVER);
                 } else {
-                    g2.setColor(BTN_BG);
+                    g2.setColor(ACCENT); // Dibuat menonjol dengan warna ACCENT
                 }
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        btnLogin.setFont(new Font("SansSerif", Font.BOLD, 15));
-        btnLogin.setForeground(TEXT_WHITE);
-        btnLogin.setContentAreaFilled(false);
-        btnLogin.setBorderPainted(false);
-        btnLogin.setFocusPainted(false);
-        btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnLogin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
-        btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnRegister.setFont(new Font("SansSerif", Font.BOLD, 15));
+        btnRegister.setForeground(TEXT_WHITE);
+        btnRegister.setContentAreaFilled(false);
+        btnRegister.setBorderPainted(false);
+        btnRegister.setFocusPainted(false);
+        btnRegister.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnRegister.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
+        btnRegister.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ----- Footer Sign Up -----
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
-        footer.setOpaque(false);
-        footer.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel lblNoAccount = new JLabel("Don't have an account ?");
-        lblNoAccount.setFont(new Font("SansSerif", Font.BOLD, 13));
-        lblNoAccount.setForeground(TEXT_WHITE);
-
-        JButton btnSignUp = new JButton("Sign up");
-        btnSignUp.setFont(new Font("SansSerif", Font.BOLD, 13));
-        btnSignUp.setForeground(ACCENT);
-        btnSignUp.setContentAreaFilled(false);
-        btnSignUp.setBorderPainted(false);
-        btnSignUp.setFocusPainted(false);
-        btnSignUp.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSignUp.addActionListener(e -> {
-            // PERUBAHAN DI SINI: TODO diaktifkan
-            RegisterView registerView = new RegisterView();
-            AuthService authService = new AuthService(); // Membuat instansiasi AuthService
-            new RegisterController(registerView, authService); // Menghubungkan view dengan controllernya
-            registerView.setVisible(true); // Menampilkan form register
-            dispose(); // Menutup form login
-        });
-
-        footer.add(lblNoAccount);
-        footer.add(btnSignUp);
+        // ----- Tombol Batal / Kembali ke Login -----
+        btnCancel = new JButton("Back to Login");
+        btnCancel.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnCancel.setForeground(TEXT_GRAY);
+        btnCancel.setContentAreaFilled(false);
+        btnCancel.setBorderPainted(false);
+        btnCancel.setFocusPainted(false);
+        btnCancel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnCancel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
+        btnCancel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // ----- Drag Support -----
         addDragSupport(card);
@@ -207,26 +151,37 @@ public class LoginView extends JFrame {
 
         // ----- Susun Komponen -----
         formPanel.add(topBar);
-        formPanel.add(Box.createVerticalStrut(10));
         formPanel.add(lblTitle);
         formPanel.add(Box.createVerticalStrut(8));
         formPanel.add(lblSub);
-        formPanel.add(Box.createVerticalStrut(28));
+        formPanel.add(Box.createVerticalStrut(24));
+        
+        formPanel.add(lblNama);
+        formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(txtNamaPanjang);
+        formPanel.add(Box.createVerticalStrut(12));
+
         formPanel.add(lblUser);
         formPanel.add(Box.createVerticalStrut(8));
         formPanel.add(txtUsername);
-        formPanel.add(Box.createVerticalStrut(16));
+        formPanel.add(Box.createVerticalStrut(12));
+
         formPanel.add(lblPass);
         formPanel.add(Box.createVerticalStrut(8));
         formPanel.add(passPanel);
+        formPanel.add(Box.createVerticalStrut(12));
+
+        formPanel.add(lblConfirmPass);
         formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(confirmPassPanel);
+        formPanel.add(Box.createVerticalStrut(8));
+
         formPanel.add(lblStatus);
         formPanel.add(Box.createVerticalStrut(16));
-        formPanel.add(btnLogin);
-        formPanel.add(Box.createVerticalStrut(16));
-        formPanel.add(footer);
+        formPanel.add(btnRegister);
+        formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(btnCancel);
 
-        // Tambahkan formPanel ke card dengan GridBagLayout agar center
         GridBagConstraints cardGbc = new GridBagConstraints();
         cardGbc.anchor = GridBagConstraints.CENTER;
         cardGbc.fill = GridBagConstraints.BOTH;
@@ -249,7 +204,60 @@ public class LoginView extends JFrame {
         bg.add(card, gbc);
 
         setContentPane(bg);
-        getRootPane().setDefaultButton(btnLogin);
+        getRootPane().setDefaultButton(btnRegister); // Enter = Sign Up
+    }
+
+    // Method pembantu untuk membuat panel password dengan tombol mata
+    private JPanel createPasswordPanel(JPasswordField passwordField) {
+        passwordField.setEchoChar('●');
+        
+        JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(BG_INPUT);
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8);
+                g2.setColor(BORDER_INPUT);
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8);
+            }
+        };
+        panel.setOpaque(false);
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        passwordField.setOpaque(false);
+        passwordField.setForeground(TEXT_WHITE);
+        passwordField.setCaretColor(ACCENT);
+        passwordField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        passwordField.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 0));
+
+        JButton btnEye = new JButton("👁") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(BG_INPUT);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btnEye.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        btnEye.setForeground(TEXT_GRAY);
+        btnEye.setContentAreaFilled(false);
+        btnEye.setBorderPainted(false);
+        btnEye.setFocusPainted(false);
+        btnEye.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnEye.setPreferredSize(new Dimension(44, 46));
+        btnEye.addActionListener(e -> {
+            boolean show = passwordField.getEchoChar() == '\0';
+            passwordField.setEchoChar(show ? '●' : '\0');
+        });
+
+        panel.add(passwordField, BorderLayout.CENTER);
+        panel.add(btnEye, BorderLayout.EAST);
+        
+        return panel;
     }
 
     private JLabel makeCenterLabel(String text) {
@@ -319,9 +327,13 @@ public class LoginView extends JFrame {
         });
     }
 
+    // ===== GETTERS =====
+    public String getNamaPanjang()        { return txtNamaPanjang.getText().trim(); }
     public String getUsername()           { return txtUsername.getText().trim(); }
     public String getPassword()           { return new String(txtPassword.getPassword()); }
-    public JButton getBtnLogin()          { return btnLogin; }
+    public String getConfirmPassword()    { return new String(txtConfirmPassword.getPassword()); }
+    
+    public JButton getBtnRegister()       { return btnRegister; }
     public JButton getBtnCancel()         { return btnCancel; }
     public JCheckBox getChkShowPassword() { return chkShowPassword; }
     public JPasswordField getTxtPassword(){ return txtPassword; }
@@ -332,9 +344,11 @@ public class LoginView extends JFrame {
     }
 
     public void clearFields() {
+        txtNamaPanjang.setText("");
         txtUsername.setText("");
         txtPassword.setText("");
+        txtConfirmPassword.setText("");
         lblStatus.setText(" ");
-        txtUsername.requestFocus();
+        txtNamaPanjang.requestFocus();
     }
 }
