@@ -35,14 +35,15 @@ public class LoginController {
         String username = view.getUsername();
         String password = view.getPassword();
 
-        // Validasi input kosong
         if (username.isEmpty() || password.isEmpty()) {
-            view.setStatus("Username dan password wajib diisi!", true);
+            view.setStatus("Username dan password wajib diisi! ", true);
             return;
         }
-
+        view.setStatus("Login berhasilLLLLL!", false);
         // Proses autentikasi
         if (authService.login(username, password)) {
+            //DIBAWAH INI SEMENTARA ERRROR
+            view.setStatus("Login berhasilLLLLL!", false);
             User user = authService.getLoggedInUser();
             view.setStatus("Login berhasil!", false);
 
