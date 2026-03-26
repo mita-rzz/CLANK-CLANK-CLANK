@@ -3,7 +3,9 @@ package controller;
 import javax.swing.JOptionPane;
 import main.MainFrame;
 import view.DashboardView;
+import view.JasaView;
 import view.TransaksiView;
+
 
 public class DashboardController {
 
@@ -16,9 +18,8 @@ public class DashboardController {
     // Sub-controller untuk masing-masing menu
     private TransaksiView transaksiView;
     private TransaksiController transaksiCtrl;
-    
-    // Nanti buka komentarnya kalau halamannya sudah kamu buat
-    // private JasaController jasaCtrl;
+    private JasaView jasaView;
+    private JasaController jasaCtrl;
     // private SparepartController sparepartCtrl;
     // private RestockController restockCtrl;
     // private LaporanController laporanCtrl;
@@ -33,7 +34,9 @@ public class DashboardController {
         // 1. Inisialisasi halaman Transaksi di awal
         this.transaksiView = new TransaksiView(); 
         this.transaksiCtrl = new TransaksiController(transaksiView);
-        
+        this.jasaView= new JasaView();
+        this.jasaCtrl=new JasaController(jasaView);
+        this.jasaCtrl.initController();
         initController();
         
         // 2. Tampilkan menu Transaksi secara otomatis saat Dashboard pertama kali dibuka
@@ -72,7 +75,7 @@ public class DashboardController {
     public void showMenuManipulasiJasa() {
         System.out.println("Menampilkan Menu Manipulasi Jasa...");
         view.setTombolAktif(view.getBtnMenuJasa());
-        // Nanti tambahkan: view.tampilkanViewDiMainContent(jasaView);
+        view.tampilkanViewDiMainContent(jasaView);
     }
 
     public void showMenuMengisiStock() {
