@@ -80,7 +80,8 @@ public class LoginController {
                 JOptionPane.INFORMATION_MESSAGE);
             
             // PENTING: view.dispose() DIHAPUS karena ini JPanel.
-            // Nantinya di sini kamu memanggil: mainFrame.tampilkanHalaman("HALAMAN_DASHBOARD");
+            mainFrame.tampilkanHalaman("HALAMAN_DASHBOARD");
+            
             bersihkanForm();
             
         } else {

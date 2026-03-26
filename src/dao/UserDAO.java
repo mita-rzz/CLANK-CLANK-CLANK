@@ -25,7 +25,7 @@ public class UserDAO {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) { 
-                    user = new User();
+                    user = new User();  
                     user.setIdUser(rs.getInt("id_User")); // Sesuaikan dengan nama kolom di database
                     user.setUsername(rs.getString("username"));
                     user.setPassword(rs.getString("user_password"));
