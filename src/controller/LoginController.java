@@ -2,6 +2,7 @@ package controller;
 import main.MainFrame;
 import dao.UserDAO;
 import model.User;
+import session.UserSession;
 import view.LoginView;
 import view.RegisterView;
 import javax.swing.JOptionPane;
@@ -9,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import session.UserSession;
 public class LoginController {
 
     // ATRIBUT
@@ -74,6 +75,8 @@ public class LoginController {
         User user = userDao.autentikasiUser(username, password);
 
         if (user != null) {
+            UserSession.setIdUserLogin(user.getIdUser());
+            UserSession.setNamaUserLogin(user.getUsername());
             JOptionPane.showMessageDialog(view, 
                 "Welcome back, " + user.getNamaLengkap() + "!", 
                 "Login Sukses", 

@@ -12,7 +12,7 @@ Proyek ini menggunakan arsitektur MVC yang sudah dimodifikasi dan disesuaikan de
 3. Menjalankan projek java dengan menggunakan syntax dibawah ini:
 
 ```bash
-javac -d bin -sourcepath src -cp "lib\*" src\model\*.java src\database\*.java src\dao\*.java src\view\*.java src\controller\*.java src\*.java
+    javac -d bin -sourcepath src -cp "lib\*" src\model\*.java src\database\*.java src\dao\*.java src\view\*.java src\controller\*.java src\*.java
 
-java -cp "bin;lib\*" Main
+    java -cp "bin;lib\*" Main
 ```

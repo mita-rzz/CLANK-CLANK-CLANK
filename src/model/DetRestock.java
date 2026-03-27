@@ -9,8 +9,8 @@ public class DetRestock {
     private int idRestock;      // Menghubungkan ke ID di class Restock
     private int idSparepart;    // Menghubungkan ke ID di class Sparepart
     private int jumlahRestock;
-    private double hargaSatuan;
-    private double subTotalRest;
+    private int hargaSatuan;
+    private int subTotalRest;
 
     // ==========================================
     // 2. CONSTRUCTOR KOSONG
@@ -58,15 +58,15 @@ public class DetRestock {
         return hargaSatuan;
     }
 
-    public void setHargaSatuan(double hargaSatuan) {
+    public void setHargaSatuan(int hargaSatuan) {
         this.hargaSatuan = hargaSatuan;
     }
 
-    public double getSubTotalRest() {
+    public int getSubTotalRest() {
         return subTotalRest;
     }
 
-    public void setSubTotalRest(double subTotalRest) {
+    public void setSubTotalRest(int subTotalRest) {
         this.subTotalRest = subTotalRest;
     }
 }

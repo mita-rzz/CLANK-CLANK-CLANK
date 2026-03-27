@@ -60,4 +60,5 @@ public class Sparepart {
     public void setStok(int stok) {
         this.stok = stok;
     }
+    
 }

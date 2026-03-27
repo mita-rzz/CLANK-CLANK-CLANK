@@ -4,8 +4,8 @@ import javax.swing.JOptionPane;
 import main.MainFrame;
 import view.DashboardView;
 import view.JasaView;
+import view.RestockView;
 import view.TransaksiView;
-
 
 public class DashboardController {
 
@@ -20,6 +20,8 @@ public class DashboardController {
     private TransaksiController transaksiCtrl;
     private JasaView jasaView;
     private JasaController jasaCtrl;
+    private RestockView restockView;
+    private RestockController restockCtrl;
     // private SparepartController sparepartCtrl;
     // private RestockController restockCtrl;
     // private LaporanController laporanCtrl;
@@ -34,9 +36,13 @@ public class DashboardController {
         // 1. Inisialisasi halaman Transaksi di awal
         this.transaksiView = new TransaksiView(); 
         this.transaksiCtrl = new TransaksiController(transaksiView);
+        this.restockView=new RestockView();
+        this.restockCtrl=new RestockController(restockView);
+        this.restockCtrl.initController();
         this.jasaView= new JasaView();
         this.jasaCtrl=new JasaController(jasaView);
         this.jasaCtrl.initController();
+        
         initController();
         
         // 2. Tampilkan menu Transaksi secara otomatis saat Dashboard pertama kali dibuka
@@ -81,7 +87,7 @@ public class DashboardController {
     public void showMenuMengisiStock() {
         System.out.println("Menampilkan Menu Mengisi Stock...");
         view.setTombolAktif(view.getBtnMenuRestock());
-        // Nanti tambahkan: view.tampilkanViewDiMainContent(restockView);
+         view.tampilkanViewDiMainContent(restockView);
     }
 
     public void showMenuAturSparepart() {
