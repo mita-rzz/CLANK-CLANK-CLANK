@@ -1,10 +1,10 @@
 package dao;
 
+import database.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import model.Sparepart;
-import database.DatabaseConnection; // Sesuaikan dengan nama class koneksimu
+import model.Sparepart; // Sesuaikan dengan nama class koneksimu
 
 public class SparepartDAO {
 
@@ -41,6 +41,7 @@ public class SparepartDAO {
                 Sparepart sp = new Sparepart();
                 sp.setIdSparepart(rs.getInt("id_sparepart"));
                 sp.setNamaSparepart(rs.getString("nama_sparepart"));
+                sp.setHargaBeli(rs.getInt("harga_beli"));
                 sp.setHargaJual(rs.getInt("harga_jual"));
                 sp.setStok(rs.getInt("stok"));
                 listSparepart.add(sp);
@@ -69,6 +70,7 @@ public class SparepartDAO {
                 Sparepart sp = new Sparepart();
                 sp.setIdSparepart(rs.getInt("id_sparepart"));
                 sp.setNamaSparepart(rs.getString("nama_sparepart"));
+                sp.setHargaBeli(rs.getInt("harga_beli"));
                 sp.setHargaJual(rs.getInt("harga_jual"));
                 sp.setStok(rs.getInt("stok"));
                 listSparepart.add(sp);
@@ -112,12 +114,13 @@ public class SparepartDAO {
      * Menambahkan data master sparepart baru ke database.
      */
     public void tambahSparepart(Sparepart sparepartBaru) {
-        String sql = "INSERT INTO tb_sparepart (nama_sparepart, harga_jual, stok) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO tb_sparepart (nama_sparepart,harga_beli, harga_jual, stok) VALUES (?,?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, sparepartBaru.getNamaSparepart());
-            ps.setInt(2, sparepartBaru.getHargaJual());
-            ps.setInt(3, sparepartBaru.getStok());
+            ps.setInt(2,sparepartBaru.getHargaBeli());
+            ps.setInt(3, sparepartBaru.getHargaJual());
+            ps.setInt(4, sparepartBaru.getStok());
             
             ps.executeUpdate();
             System.out.println("Data Sparepart Baru Berhasil Ditambahkan!");
@@ -131,13 +134,14 @@ public class SparepartDAO {
      * Mengupdate/mengedit data sparepart yang sudah ada (misal: ganti nama atau harga).
      */
     public void updateSparepart(Sparepart sparepartEdit) {
-        String sql = "UPDATE tb_sparepart SET nama_sparepart = ?, harga_jual = ?, stok = ? WHERE id_sparepart = ?";
+        String sql = "UPDATE tb_sparepart SET nama_sparepart = ?,harga_beli=?, harga_jual = ?, stok = ? WHERE id_sparepart = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, sparepartEdit.getNamaSparepart());
-            ps.setInt(2, sparepartEdit.getHargaJual());
-            ps.setInt(3, sparepartEdit.getStok());
-            ps.setInt(4, sparepartEdit.getIdSparepart());
+            ps.setInt(2,sparepartEdit.getHargaBeli());
+            ps.setInt(3, sparepartEdit.getHargaJual());
+            ps.setInt(4, sparepartEdit.getStok());
+            ps.setInt(5, sparepartEdit.getIdSparepart());
             
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -153,6 +157,7 @@ public class SparepartDAO {
      * Menambah jumlah stok sparepart (digunakan saat menu Restock).
      */
     public void tambahStok(int idSparepart, int jumlah) {
+        System.out.println(idSparepart);
         String sql = "UPDATE tb_sparepart SET stok = stok + ? WHERE id_sparepart = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

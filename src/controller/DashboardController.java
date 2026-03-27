@@ -5,6 +5,7 @@ import main.MainFrame;
 import view.DashboardView;
 import view.JasaView;
 import view.RestockView;
+import view.SparepartView;
 import view.TransaksiView;
 
 public class DashboardController {
@@ -22,6 +23,8 @@ public class DashboardController {
     private JasaController jasaCtrl;
     private RestockView restockView;
     private RestockController restockCtrl;
+    private SparepartController sparepartCtrl;
+    private SparepartView sparepartView;
     // private SparepartController sparepartCtrl;
     // private RestockController restockCtrl;
     // private LaporanController laporanCtrl;
@@ -42,7 +45,9 @@ public class DashboardController {
         this.jasaView= new JasaView();
         this.jasaCtrl=new JasaController(jasaView);
         this.jasaCtrl.initController();
-        
+        this.sparepartView=new SparepartView();
+        this.sparepartCtrl=new SparepartController(sparepartView);
+        this.sparepartCtrl.initController();
         initController();
         
         // 2. Tampilkan menu Transaksi secara otomatis saat Dashboard pertama kali dibuka
@@ -93,7 +98,7 @@ public class DashboardController {
     public void showMenuAturSparepart() {
         System.out.println("Menampilkan Menu Atur Sparepart...");
         view.setTombolAktif(view.getBtnMenuSparepart());
-        // Nanti tambahkan: view.tampilkanViewDiMainContent(sparepartView);
+        view.tampilkanViewDiMainContent(sparepartView);
     }
 
     public void showMenuLaporan() {

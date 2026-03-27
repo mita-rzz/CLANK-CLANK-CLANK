@@ -12,8 +12,8 @@ import view.JasaView;
 
 import view.LoginView;
 import view.RegisterView;
+import view.SparepartView;
 import view.TransaksiView;
-
 public class Main {
     public static void main(String[] args) {
         // 1. Buat Jendela Utama (MainFrame) yang bertindak sebagai "Meja"
@@ -23,12 +23,13 @@ public class Main {
         DashboardView dashboardView = new DashboardView();
         JasaView jasaView = new JasaView();
         // TransaksiView transaksiView = new TransaksiView();
-
+        // SparepartView sparepartView=new SparepartView();
 
         mainFrame.tambahHalaman(loginView, "HALAMAN_LOGIN");
         mainFrame.tambahHalaman(registerView, "HALAMAN_REGISTER");
         mainFrame.tambahHalaman(dashboardView, "HALAMAN_DASHBOARD");
         mainFrame.tambahHalaman(jasaView,"HALAMAN_JASA");
+        
         // mainFrame.tambahHalaman(transaksiView, "HALAMAN_TRANSAKSI");
 
 
