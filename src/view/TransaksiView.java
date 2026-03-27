@@ -6,10 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentListener;
-
 
 public class TransaksiView extends JPanel {
 
@@ -24,28 +21,26 @@ public class TransaksiView extends JPanel {
     private JPopupMenu popupSaranJasa;
     private JButton btnTambahJasa;
     
-    private JTextField txtNamaJasaManual;
-    private JTextField txtTarifJasaManual;
-    private JButton btnTambahManual;
+    // Fitur Manual Jasa Dihapus
     
     private JTextField txtSearchSparepart;
     private JPopupMenu popupSaranSparepart;
     private JTextField txtKuantitas;
     private JButton btnTambahSparepart;
     
-  
     private JLabel lblTotalBiaya;
     private JButton btnSelesaikanTransaksi;
     
     private JPanel pnlDaftarItem; 
     private JScrollPane scrollDaftarItem; 
-    // Palet Warna (Mengikuti referensi DashboardView & Screenshot)
-    private final Color COLOR_BG_MAIN = new Color(14, 15, 19);
-    private final Color COLOR_BG_PANEL = new Color(26, 27, 36);
-    private final Color COLOR_INPUT_BG = new Color(14, 15, 19);
-    private final Color COLOR_TEXT_NORMAL = new Color(200, 200, 200);
-    private final Color COLOR_ACCENT = new Color(255, 60, 90); // Pink/Merah aksen
-    private final Color COLOR_BTN_NORMAL = new Color(50, 52, 68);
+    
+    // Palet Warna 
+    private final Color COLOR_BG_MAIN = new Color(26, 26, 36);
+    private final Color COLOR_BG_PANEL = new Color(37, 37, 51);
+    private final Color COLOR_INPUT_BG = new Color(30, 30, 40);
+    private final Color COLOR_TEXT_NORMAL = new Color(220, 220, 220);
+    private final Color COLOR_ACCENT = new Color(216, 67, 97); 
+    private final Color COLOR_BTN_NORMAL = new Color(50, 50, 70);
 
     // ==========================================
     // 2. CONSTRUCTOR
@@ -91,17 +86,13 @@ public class TransaksiView extends JPanel {
         popupSaranJasa = new JPopupMenu();
         btnTambahJasa = buatButton("+ Tambah Jasa", COLOR_BTN_NORMAL);
 
-        txtNamaJasaManual = buatTextField("Ketik nama jasa manual...");
-        txtTarifJasaManual = buatTextField("Contoh: 25000");
-        btnTambahManual = buatButton("+ Tambah Manual", COLOR_BTN_NORMAL);
-
         txtSearchSparepart = buatTextField("-- Ketik Sparepart --");
         popupSaranSparepart = new JPopupMenu();
         txtKuantitas = buatTextField("1");
         btnTambahSparepart = buatButton("+ Tambah Sparepart", COLOR_BTN_NORMAL);
 
         lblTotalBiaya = new JLabel("RP 0");
-        lblTotalBiaya.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTotalBiaya.setFont(new Font("Segoe UI", Font.BOLD, 22)); 
         lblTotalBiaya.setForeground(COLOR_ACCENT);
         
         btnSelesaikanTransaksi = buatButton("✓ Selesaikan Transaksi", COLOR_ACCENT);
@@ -109,54 +100,76 @@ public class TransaksiView extends JPanel {
     }
 
     private JPanel buatPanelInformasi() {
-        JPanel pnl = buatSectionPanel("Informasi Pelanggan & Kendaraan");
-        pnl.setLayout(new GridLayout(2, 3, 15, 5));
+        JPanel pnl = new JPanel(new GridBagLayout());
+        pnl.setBackground(COLOR_BG_PANEL);
+        pnl.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_BG_PANEL.darker(), 1),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
 
-        pnl.add(buatLabel("Nama Pelanggan"));
-        pnl.add(buatLabel("Nomor Kendaraan"));
-        pnl.add(buatLabel("Nama Mekanik"));
-        pnl.add(txtNamaPelanggan);
-        pnl.add(txtPlatNomor);
-        pnl.add(txtNamaMekanik);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Judul Form
+        JLabel lblJudul = new JLabel("Informasi Pelanggan & Kendaraan");
+        lblJudul.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblJudul.setForeground(Color.WHITE);
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 3;
+        pnl.add(lblJudul, gbc);
+
+        // Kembalikan ke 1 Kolom
+        gbc.gridwidth = 1;
+
+        // Baris Label
+        gbc.gridy = 1; gbc.gridx = 0; pnl.add(buatLabel("Nama Pelanggan"), gbc);
+        gbc.gridx = 1; pnl.add(buatLabel("Nomor Kendaraan"), gbc);
+        gbc.gridx = 2; pnl.add(buatLabel("Nama Mekanik"), gbc);
+
+        // Baris Input
+        gbc.gridy = 2; gbc.gridx = 0; pnl.add(txtNamaPelanggan, gbc);
+        gbc.gridx = 1; pnl.add(txtPlatNomor, gbc);
+        gbc.gridx = 2; pnl.add(txtNamaMekanik, gbc);
 
         return pnl;
     }
 
     private JPanel buatPanelTambahItem() {
-        JPanel pnl = buatSectionPanel("Tambah Jasa & Sparepart");
-        pnl.setLayout(new GridBagLayout());
+        JPanel pnl = new JPanel(new GridBagLayout());
+        pnl.setBackground(COLOR_BG_PANEL);
+        pnl.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_BG_PANEL.darker(), 1),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 10, 5);
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Judul Form
+        JLabel lblJudul = new JLabel("Tambah Jasa & Sparepart");
+        lblJudul.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblJudul.setForeground(Color.WHITE);
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 3; gbc.weightx = 1.0;
+        pnl.add(lblJudul, gbc);
 
         // Baris 1: Jasa DB
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.8; gbc.gridwidth = 2;
+        gbc.gridy = 1; gbc.gridx = 0; gbc.gridwidth = 2; gbc.weightx = 0.8;
         pnl.add(buatLabel("Cari Jasa (Dari Database)"), gbc);
-        gbc.gridy = 1; 
+        
+        gbc.gridy = 2; gbc.gridx = 0; gbc.gridwidth = 2;
         pnl.add(txtSearchJasa, gbc);
-        gbc.gridx = 2; gbc.weightx = 0.2; gbc.gridwidth = 1;
+        gbc.gridx = 2; gbc.gridwidth = 1; gbc.weightx = 0.2;
         pnl.add(btnTambahJasa, gbc);
 
-        // Baris 2: Jasa Manual
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.5;
-        pnl.add(buatLabel("Nama Jasa (Manual)"), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.3;
-        pnl.add(buatLabel("Tarif Jasa (Rp)"), gbc);
-        
-        gbc.gridx = 0; gbc.gridy = 3;
-        pnl.add(txtNamaJasaManual, gbc);
-        gbc.gridx = 1;
-        pnl.add(txtTarifJasaManual, gbc);
-        gbc.gridx = 2; gbc.weightx = 0.2;
-        pnl.add(btnTambahManual, gbc);
-
-        // Baris 3: Sparepart
-        gbc.gridx = 0; gbc.gridy = 4; gbc.weightx = 0.5;
+        // Baris 2: Sparepart (Geser naik karena jasa manual dihapus)
+        gbc.gridy = 3; gbc.gridx = 0; gbc.weightx = 0.5;
         pnl.add(buatLabel("Cari Sparepart"), gbc);
         gbc.gridx = 1; gbc.weightx = 0.3;
         pnl.add(buatLabel("Kuantitas"), gbc);
         
-        gbc.gridx = 0; gbc.gridy = 5;
+        gbc.gridy = 4; gbc.gridx = 0;
         pnl.add(txtSearchSparepart, gbc);
         gbc.gridx = 1;
         pnl.add(txtKuantitas, gbc);
@@ -167,33 +180,50 @@ public class TransaksiView extends JPanel {
     }
 
     private JPanel buatPanelTabel() {
-    JPanel pnl = buatSectionPanel("Daftar Item Transaksi");
-    pnl.setLayout(new BorderLayout(0, 10));
+        JPanel pnl = new JPanel(new BorderLayout(0, 10));
+        pnl.setBackground(COLOR_BG_PANEL);
+        pnl.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_BG_PANEL.darker(), 1),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
 
-    // Inisialisasi Panel Dinamis dengan BoxLayout (Menumpuk ke bawah)
-    pnlDaftarItem = new JPanel();
-    pnlDaftarItem.setLayout(new BoxLayout(pnlDaftarItem, BoxLayout.Y_AXIS));
-    pnlDaftarItem.setBackground(COLOR_BG_PANEL);
+        // Header Katalog
+        JPanel panelHeaderKatalog = new JPanel(new BorderLayout());
+        panelHeaderKatalog.setBackground(COLOR_BG_PANEL);
+        
+        JLabel lblJudulKatalog = new JLabel("Daftar Item Transaksi");
+        lblJudulKatalog.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblJudulKatalog.setForeground(Color.WHITE);
+        panelHeaderKatalog.add(lblJudulKatalog, BorderLayout.WEST);
+        pnl.add(panelHeaderKatalog, BorderLayout.NORTH);
 
-    // Masukkan ke dalam ScrollPane
-    scrollDaftarItem = new JScrollPane(pnlDaftarItem);
-    scrollDaftarItem.getViewport().setBackground(COLOR_BG_PANEL);
-    scrollDaftarItem.setBorder(BorderFactory.createEmptyBorder());
-    scrollDaftarItem.getVerticalScrollBar().setUnitIncrement(16); // Agar scroll mouse mulus
-    
-    pnl.add(scrollDaftarItem, BorderLayout.CENTER);
+        // Inisialisasi Panel Dinamis dengan BoxLayout
+        pnlDaftarItem = new JPanel();
+        pnlDaftarItem.setLayout(new BoxLayout(pnlDaftarItem, BoxLayout.Y_AXIS));
+        pnlDaftarItem.setBackground(COLOR_BG_MAIN); 
 
-    return pnl;
+        // Masukkan ke dalam ScrollPane
+        scrollDaftarItem = new JScrollPane(pnlDaftarItem);
+        scrollDaftarItem.getViewport().setBackground(COLOR_BG_MAIN);
+        scrollDaftarItem.setBorder(BorderFactory.createLineBorder(COLOR_BG_PANEL.darker()));
+        scrollDaftarItem.getVerticalScrollBar().setUnitIncrement(16); 
+        
+        pnl.add(scrollDaftarItem, BorderLayout.CENTER);
+
+        return pnl;
     }
 
     private JPanel buatPanelBawah() {
         JPanel pnl = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         pnl.setBackground(COLOR_BG_PANEL);
-        pnl.setBorder(new LineBorder(new Color(40, 42, 54), 1, true));
+        pnl.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_BG_PANEL.darker(), 1),
+                BorderFactory.createEmptyBorder(5, 20, 5, 20)
+        ));
 
         JLabel lblTextTotal = new JLabel("TOTAL BIAYA: ");
-        lblTextTotal.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblTextTotal.setForeground(COLOR_TEXT_NORMAL);
+        lblTextTotal.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblTextTotal.setForeground(Color.WHITE);
 
         pnl.add(lblTextTotal);
         pnl.add(lblTotalBiaya);
@@ -203,26 +233,17 @@ public class TransaksiView extends JPanel {
     }
 
     // --- Method Desain Khusus ---
-    private JPanel buatSectionPanel(String title) {
-        JPanel pnl = new JPanel();
-        pnl.setBackground(COLOR_BG_PANEL);
-        TitledBorder border = BorderFactory.createTitledBorder(
-                new LineBorder(COLOR_BG_PANEL), title);
-        border.setTitleColor(Color.WHITE);
-        border.setTitleFont(new Font("Segoe UI", Font.BOLD, 14));
-        pnl.setBorder(BorderFactory.createCompoundBorder(
-                border, new EmptyBorder(10, 15, 15, 15)));
-        return pnl;
-    }
 
     private JTextField buatTextField(String tooltip) {
         JTextField txt = new JTextField();
+        txt.setPreferredSize(new Dimension(0, 35)); 
         txt.setBackground(COLOR_INPUT_BG);
         txt.setForeground(Color.WHITE);
         txt.setCaretColor(Color.WHITE);
         txt.setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(new Color(60, 60, 70)),
-                new EmptyBorder(8, 10, 8, 10)));
+                BorderFactory.createLineBorder(new Color(80, 40, 60)), 
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
         txt.setToolTipText(tooltip);
         return txt;
     }
@@ -231,9 +252,9 @@ public class TransaksiView extends JPanel {
         JButton btn = new JButton(text);
         btn.setBackground(bg);
         btn.setForeground(Color.WHITE);
-        btn.setFocusPainted(false);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btn.setBorder(new EmptyBorder(10, 15, 10, 15));
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false); 
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return btn;
     }
@@ -245,8 +266,6 @@ public class TransaksiView extends JPanel {
         return lbl;
     }
 
-   
-
     // ==========================================
     // 4. METHOD SESUAI STRUKTUR (GETTER & SETTER UI)
     // ==========================================
@@ -254,12 +273,6 @@ public class TransaksiView extends JPanel {
     public String getPlatNomor() { return txtPlatNomor.getText(); }
     public String getNamaMekanik() { return txtNamaMekanik.getText(); }
     public String getSearchJasa() { return txtSearchJasa.getText(); }
-    public String getNamaJasaManual() { return txtNamaJasaManual.getText(); }
-    
-    public double getTarifJasaManual() {
-        try { return Double.parseDouble(txtTarifJasaManual.getText()); } 
-        catch (NumberFormatException e) { return 0; }
-    }
     
     public String getSearchSparepart() { return txtSearchSparepart.getText(); }
     
@@ -269,36 +282,30 @@ public class TransaksiView extends JPanel {
     }
 
     public void tampilkanSaranJasa(List<String> listJasa) {
-    // 1. Bersihkan sisa menu sebelumnya
-    popupSaranJasa.removeAll();
+        popupSaranJasa.removeAll();
     
-        // 2. Jika tidak ada hasil pencarian (kosong), sembunyikan popup dan berhenti di sini
         if (listJasa.isEmpty()) {
             popupSaranJasa.setVisible(false);
             return;
         }
     
-        // 3. Masukkan hasil pencarian baru ke dalam menu
         for (String jasa : listJasa) {
             JMenuItem item = new JMenuItem(jasa);
             item.addActionListener(e -> {
                 txtSearchJasa.setText(jasa);
-                popupSaranJasa.setVisible(false); // Otomatis menutup popup setelah dipilih
+                popupSaranJasa.setVisible(false); 
             });
             popupSaranJasa.add(item);
         }
     
-    // 4. KUNCI PERTAMA: Set supaya tidak mencuri fokus (taruh SEBELUM di-show)
-    popupSaranJasa.setFocusable(false); 
+        popupSaranJasa.setFocusable(false); 
 
-    // 5. Tampilkan popup HANYA JIKA kursor memang sedang berada di kotak pencarian
-    if (txtSearchJasa.isFocusOwner()) {
-        popupSaranJasa.show(txtSearchJasa, 0, txtSearchJasa.getHeight());
-        
-        // 6. KUNCI KEDUA: Paksa kursor berkedip lagi di kotak teks!
-        txtSearchJasa.requestFocusInWindow();
+        if (txtSearchJasa.isFocusOwner()) {
+            popupSaranJasa.show(txtSearchJasa, 0, txtSearchJasa.getHeight());
+            txtSearchJasa.requestFocusInWindow();
+        }
     }
-}
+
     public void tampilkanSaranSparepart(List<String> listSparepart) {
         popupSaranSparepart.removeAll();
         for (String sp : listSparepart) {
@@ -311,14 +318,11 @@ public class TransaksiView extends JPanel {
         }
     }
 
-   
-
     public void setTotalBiaya(double total) {
         lblTotalBiaya.setText("RP " + String.format("%,.0f", total));
     }
 
     public void tampilkanStruk(String dataStruk) {
-        // Bisa menggunakan JOptionPane berukuran besar atau JDialog khusus
         JTextArea txtStruk = new JTextArea(dataStruk);
         txtStruk.setEditable(false);
         txtStruk.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -328,7 +332,6 @@ public class TransaksiView extends JPanel {
     public void tampilkanPesan(String pesan) {
         JOptionPane.showMessageDialog(this, pesan);
     }
-
 
     // ==========================================
     // 5. METHOD LISTENER UNTUK CONTROLLER
@@ -345,129 +348,108 @@ public class TransaksiView extends JPanel {
         btnTambahJasa.addActionListener(listener);
     }
 
-    public void addTambahManualListener(ActionListener listener) {
-        btnTambahManual.addActionListener(listener);
-    }
-
     public void addTambahSparepartListener(ActionListener listener) {
         btnTambahSparepart.addActionListener(listener);
     }
 
-  
     public void addSelesaikanTransaksiListener(ActionListener listener) {
         btnSelesaikanTransaksi.addActionListener(listener);
     }
-
 
     // ==========================================
     // METHOD UNTUK MEMBERSIHKAN KOTAK INPUT
     // ==========================================
 
-    // 1. Kosongkan kotak pencarian Jasa DB
     public void bersihkanInputJasa() {
         txtSearchJasa.setText("");
-        txtSearchJasa.requestFocus(); // Biar kursor langsung kedap-kedip di sini lagi
+        txtSearchJasa.requestFocus();
     }
 
-    // 2. Kosongkan kotak Jasa Manual
-    public void bersihkanInputJasaManual() {
-        txtNamaJasaManual.setText("");
-        txtTarifJasaManual.setText("");
-    }
-
-    // 3. Kosongkan kotak Sparepart
     public void bersihkanInputSparepart() {
         txtSearchSparepart.setText("");
-        txtKuantitas.setText(""); // Atau bisa diset default "1": txtKuantitas.setText("1");
+        txtKuantitas.setText(""); 
         txtSearchSparepart.requestFocus();
     }
 
-    // 4. Kosongkan SEMUANYA (Biasanya dipakai setelah klik tombol "Selesaikan Transaksi")
     public void bersihkanSemuaInput() {
         bersihkanInputJasa();
-        bersihkanInputJasaManual();
         bersihkanInputSparepart();
-        // Kalau ada txtNamaPelanggan atau txtPlatNomor, tambahkan juga di sini:
-        // txtNamaPelanggan.setText("");
-        // txtPlatNomor.setText("");
     }
-
-
 
     private JPanel buatBarisItem(String jenis, String nama, String harga, String qty, String subtotal, int index, String tipeItem, Consumer<String> onDelete) {
-    JPanel pnlRow = new JPanel(new GridLayout(1, 6, 10, 0));
-    pnlRow.setBackground(new Color(36, 38, 50)); // Warna baris sedikit lebih terang
-    pnlRow.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(50, 52, 68))); // Garis bawah
-    pnlRow.setPreferredSize(new Dimension(800, 50));
-    pnlRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        JPanel pnlRow = new JPanel(new GridLayout(1, 6, 10, 0));
+        pnlRow.setBackground(COLOR_BG_PANEL); 
+        pnlRow.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(50, 50, 60))); 
+        pnlRow.setPreferredSize(new Dimension(800, 50));
+        pnlRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
-    // Badge Jenis dengan HTML
-    String color = jenis.equals("Sparepart") ? "#E67E22" : "#2980B9"; 
-    JLabel lblJenis = new JLabel("<html><div style='background-color:"+color+"; color:white; padding:5px 15px; border-radius:5px;'>"+jenis+"</div></html>");
-    lblJenis.setHorizontalAlignment(SwingConstants.CENTER);
+        String color = jenis.equals("Sparepart") ? "#E67E22" : "#2980B9"; 
+        JLabel lblJenis = new JLabel("<html><div style='background-color:"+color+"; color:white; padding:5px 15px; border-radius:5px;'>"+jenis+"</div></html>");
+        lblJenis.setHorizontalAlignment(SwingConstants.CENTER);
 
-    // Teks biasa
-    JLabel lblNama = buatLabel(nama);
-    JLabel lblHarga = buatLabel(harga);
-    JLabel lblQty = buatLabel(qty);
-    JLabel lblSubtotal = buatLabel(subtotal);
+        JLabel lblNama = buatLabel(nama);
+        JLabel lblHarga = buatLabel(harga);
+        JLabel lblQty = buatLabel(qty);
+        JLabel lblSubtotal = buatLabel(subtotal);
 
-    // Tombol Hapus (Tong Sampah)
-    JButton btnHapusRow = new JButton("🗑");
-    btnHapusRow.setBackground(new Color(231, 76, 60)); // Merah
-    btnHapusRow.setForeground(Color.WHITE);
-    btnHapusRow.setFocusPainted(false);
-    btnHapusRow.setBorderPainted(false);
-    btnHapusRow.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    
-    // Kirim trigger ke Controller saat tombol diklik
-    btnHapusRow.addActionListener(e -> onDelete.accept(tipeItem + "_" + index));
+        JButton btnHapusRow = new JButton("🗑");
+        btnHapusRow.setBackground(new Color(231, 76, 60)); 
+        btnHapusRow.setForeground(Color.WHITE);
+        btnHapusRow.setFocusPainted(false);
+        btnHapusRow.setBorderPainted(false);
+        btnHapusRow.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        btnHapusRow.addActionListener(e -> onDelete.accept(tipeItem + "_" + index));
 
-    pnlRow.add(lblJenis);
-    pnlRow.add(lblNama);
-    pnlRow.add(lblHarga);
-    pnlRow.add(lblQty);
-    pnlRow.add(lblSubtotal);
-    pnlRow.add(btnHapusRow);
+        pnlRow.add(lblJenis);
+        pnlRow.add(lblNama);
+        pnlRow.add(lblHarga);
+        pnlRow.add(lblQty);
+        pnlRow.add(lblSubtotal);
+        pnlRow.add(btnHapusRow);
 
-    return pnlRow;
-}
-
-public void renderDaftarKeranjang(List<Object[]> listJasa, List<Object[]> listSparepart, Consumer<String> onDelete) {
-    pnlDaftarItem.removeAll(); 
-
-    // Header Kolom
-    JPanel pnlHeader = new JPanel(new GridLayout(1, 6, 10, 0));
-    pnlHeader.setOpaque(false);
-    pnlHeader.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-    pnlHeader.add(buatLabel("JENIS"));
-    pnlHeader.add(buatLabel("NAMA ITEM"));
-    pnlHeader.add(buatLabel("HARGA SATUAN"));
-    pnlHeader.add(buatLabel("QTY"));
-    pnlHeader.add(buatLabel("SUBTOTAL"));
-    pnlHeader.add(buatLabel("AKSI"));
-    pnlDaftarItem.add(pnlHeader);
-
-    // Looping Jasa
-    for (int i = 0; i < listJasa.size(); i++) {
-        Object[] j = listJasa.get(i);
-        JPanel row = buatBarisItem("Jasa", j[0].toString(), j[1].toString(), j[2].toString(), j[3].toString(), i, "JASA", onDelete);
-        pnlDaftarItem.add(row);
+        return pnlRow;
     }
 
-    // Looping Sparepart
-    for (int i = 0; i < listSparepart.size(); i++) {
-        Object[] s = listSparepart.get(i);
-        JPanel row = buatBarisItem("Sparepart", s[0].toString(), s[1].toString(), s[2].toString(), s[3].toString(), i, "SPAREPART", onDelete);
-        pnlDaftarItem.add(row);
+    public void renderDaftarKeranjang(List<Object[]> listJasa, List<Object[]> listSparepart, Consumer<String> onDelete) {
+        pnlDaftarItem.removeAll(); 
+
+        // Header Kolom
+        JPanel pnlHeader = new JPanel(new GridLayout(1, 6, 10, 0));
+        pnlHeader.setOpaque(false);
+        pnlHeader.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, COLOR_BG_PANEL.darker())); 
+        pnlHeader.add(buatLabelHeader("JENIS"));
+        pnlHeader.add(buatLabelHeader("NAMA ITEM"));
+        pnlHeader.add(buatLabelHeader("HARGA SATUAN"));
+        pnlHeader.add(buatLabelHeader("QTY"));
+        pnlHeader.add(buatLabelHeader("SUBTOTAL"));
+        pnlHeader.add(buatLabelHeader("AKSI"));
+        pnlDaftarItem.add(pnlHeader);
+
+        // Looping Jasa
+        for (int i = 0; i < listJasa.size(); i++) {
+            Object[] j = listJasa.get(i);
+            JPanel row = buatBarisItem("Jasa", j[0].toString(), j[1].toString(), j[2].toString(), j[3].toString(), i, "JASA", onDelete);
+            pnlDaftarItem.add(row);
+        }
+
+        // Looping Sparepart
+        for (int i = 0; i < listSparepart.size(); i++) {
+            Object[] s = listSparepart.get(i);
+            JPanel row = buatBarisItem("Sparepart", s[0].toString(), s[1].toString(), s[2].toString(), s[3].toString(), i, "SPAREPART", onDelete);
+            pnlDaftarItem.add(row);
+        }
+
+        // Refresh UI
+        pnlDaftarItem.revalidate();
+        pnlDaftarItem.repaint();
     }
 
-    // Refresh UI
-    pnlDaftarItem.revalidate();
-    pnlDaftarItem.repaint();
+    // Helper khusus untuk Header Tabel
+    private JLabel buatLabelHeader(String text) {
+        JLabel lbl = new JLabel(text);
+        lbl.setForeground(Color.WHITE); 
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 12)); 
+        return lbl;
+    }
 }
-}
-
-
-
-

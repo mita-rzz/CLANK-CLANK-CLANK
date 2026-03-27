@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentListener;
 
 public class RestockView extends JPanel {
@@ -22,14 +21,15 @@ public class RestockView extends JPanel {
     private JDateChooser txtTanggalMasuk;
     private JButton btnUpdateStok;
     private JTextField txtBiaya;
-    private JTextField txtSupplier; // Tambahkan baris ini
-    // Palet Warna (Mengikuti referensi TransaksiView & Tema Dark)
-    private final Color COLOR_BG_MAIN = new Color(14, 15, 19);
-    private final Color COLOR_BG_PANEL = new Color(26, 27, 36);
-    private final Color COLOR_INPUT_BG = new Color(14, 15, 19);
-    private final Color COLOR_TEXT_NORMAL = new Color(200, 200, 200);
-    private final Color COLOR_ACCENT = new Color(255, 60, 90); // Pink/Merah aksen
-    private final Color COLOR_BORDER = new Color(60, 60, 70);
+    private JTextField txtSupplier;
+
+    // Palet Warna (Disesuaikan persis dengan tema JasaView)
+    private final Color COLOR_BG_MAIN = new Color(26, 26, 36);       // Menyamai COLOR_BG
+    private final Color COLOR_BG_PANEL = new Color(37, 37, 51);      // Menyamai COLOR_PANEL
+    private final Color COLOR_INPUT_BG = new Color(30, 30, 40);      // Menyamai COLOR_INPUT_BG
+    private final Color COLOR_TEXT_NORMAL = new Color(220, 220, 220);// Menyamai COLOR_TEXT
+    private final Color COLOR_ACCENT = new Color(216, 67, 97);       // Menyamai COLOR_BTN_PINK
+    private final Color COLOR_BORDER = new Color(60, 60, 75);        // Warna border textField
 
     // ==========================================
     // 2. CONSTRUCTOR
@@ -72,19 +72,21 @@ public class RestockView extends JPanel {
         txtJumlahMasuk = buatTextField("Masukkan jumlah");
         txtBiaya = buatTextField("Masukkan total biaya...");
         txtSupplier = buatTextField("Masukkan nama supplier...");
+        
         // Konfigurasi JDateChooser
         txtTanggalMasuk = new JDateChooser();
         txtTanggalMasuk.setDateFormatString("dd / MM / yyyy");
         txtTanggalMasuk.setPreferredSize(new Dimension(0, 35));
-        // Sedikit styling untuk JDateChooser agar menyesuaikan tema
         txtTanggalMasuk.getJCalendar().setBackground(Color.WHITE); 
         
+        // Konfigurasi Tombol sesuai dengan btnSimpanJasa di referensi
         btnUpdateStok = new JButton("Update Stok");
         btnUpdateStok.setBackground(COLOR_ACCENT);
         btnUpdateStok.setForeground(Color.WHITE);
         btnUpdateStok.setFocusPainted(false);
+        btnUpdateStok.setBorderPainted(false);
         btnUpdateStok.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnUpdateStok.setBorder(new EmptyBorder(10, 20, 10, 20));
+        btnUpdateStok.setPreferredSize(new Dimension(130, 35));
         btnUpdateStok.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
@@ -92,21 +94,31 @@ public class RestockView extends JPanel {
         JPanel pnl = new JPanel();
         pnl.setBackground(COLOR_BG_PANEL);
 
-        // Membuat border kotak bergaya "Card" dengan title
-        TitledBorder border = BorderFactory.createTitledBorder(
-                new LineBorder(COLOR_BG_PANEL), "Form Pengisian Stock Masuk");
-        border.setTitleColor(Color.WHITE);
-        border.setTitleFont(new Font("Segoe UI", Font.BOLD, 14));
+        // Membuat border kotak tanpa TitledBorder, menyesuaikan referensi JasaView
         pnl.setBorder(BorderFactory.createCompoundBorder(
-                border, new EmptyBorder(10, 15, 20, 15)));
+                BorderFactory.createLineBorder(COLOR_BG_PANEL.darker(), 1),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
 
         pnl.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(8, 5, 8, 5); // Jarak antar elemen
 
-        // ================= BARIS 1 (Y = 0) : Label =================
-        gbc.gridy = 0; 
+        // ================= BARIS 0 (Y = 0) : Judul Form =================
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2; // Membentang dari kiri ke kanan
+        JLabel lblFormTitle = new JLabel("Form Pengisian Stock Masuk");
+        lblFormTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblFormTitle.setForeground(Color.WHITE);
+        pnl.add(lblFormTitle, gbc);
+
+        // Kembalikan gridwidth ke 1 untuk kolom form
+        gbc.gridwidth = 1;
+
+        // ================= BARIS 1 (Y = 1) : Label =================
+        gbc.gridy = 1; 
         
         gbc.gridx = 0; 
         gbc.weightx = 0.5;
@@ -116,8 +128,9 @@ public class RestockView extends JPanel {
         gbc.weightx = 0.5;
         pnl.add(buatLabel("Total Biaya (Rp)"), gbc);
 
-        // ================= BARIS 2 (Y = 1) : Input =================
-        gbc.gridy = 1;
+        // ================= BARIS 2 (Y = 2) : Input =================
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 5, 10, 5); // Jarak input dan label bawahnya
         
         gbc.gridx = 0;
         pnl.add(txtSearchSparepart, gbc);
@@ -125,8 +138,9 @@ public class RestockView extends JPanel {
         gbc.gridx = 1; 
         pnl.add(txtBiaya, gbc);
 
-        // ================= BARIS 3 (Y = 2) : Label =================
-        gbc.gridy = 2; 
+        // ================= BARIS 3 (Y = 3) : Label =================
+        gbc.gridy = 3; 
+        gbc.insets = new Insets(8, 5, 8, 5); // Kembalikan jarak normal
         
         gbc.gridx = 0; 
         pnl.add(buatLabel("Jumlah Barang Masuk"), gbc);
@@ -134,8 +148,9 @@ public class RestockView extends JPanel {
         gbc.gridx = 1;
         pnl.add(buatLabel("Tanggal Masuk"), gbc);
 
-        // ================= BARIS 4 (Y = 3) : Input =================
-        gbc.gridy = 3;
+        // ================= BARIS 4 (Y = 4) : Input =================
+        gbc.gridy = 4;
+        gbc.insets = new Insets(0, 5, 10, 5);
         
         gbc.gridx = 0; 
         pnl.add(txtJumlahMasuk, gbc);
@@ -143,37 +158,44 @@ public class RestockView extends JPanel {
         gbc.gridx = 1;
         pnl.add(txtTanggalMasuk, gbc);
 
-        // ================= BARIS 5 (Y = 4) : Label Supplier =================
-        // Kita buat Supplier memanjang penuh (2 kolom) agar rapi
-        gbc.gridy = 4;
+        // ================= BARIS 5 (Y = 5) : Label Supplier =================
+        gbc.gridy = 5;
+        gbc.insets = new Insets(8, 5, 8, 5);
         gbc.gridx = 0;
         gbc.gridwidth = 2; // Membentang dari kiri ke kanan
         pnl.add(buatLabel("Nama Supplier"), gbc);
 
-        // ================= BARIS 6 (Y = 5) : Input Supplier =================
-        gbc.gridy = 5;
+        // ================= BARIS 6 (Y = 6) : Input Supplier =================
+        gbc.gridy = 6;
+        gbc.insets = new Insets(0, 5, 10, 5);
         pnl.add(txtSupplier, gbc);
 
-        // ================= BARIS 7 (Y = 6) : Tombol =================
-        gbc.gridy = 6;
-        gbc.gridwidth = 1; // Kembalikan ke 1 kolom agar tombol tidak memanjang penuh
+        // ================= BARIS 7 (Y = 7) : Tombol =================
+        gbc.gridy = 7;
+        gbc.gridwidth = 1; 
         gbc.fill = GridBagConstraints.NONE; // Tombol jangan memanjang
         gbc.anchor = GridBagConstraints.WEST; // Rata kiri
-        gbc.insets = new Insets(15, 5, 5, 5); // Margin atas agak renggang
-        pnl.add(btnUpdateStok, gbc);
+        
+        // Membungkus tombol dengan FlowLayout seperti di JasaView
+        JPanel panelBtnUpdate = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelBtnUpdate.setBackground(COLOR_BG_PANEL);
+        panelBtnUpdate.add(btnUpdateStok);
+
+        pnl.add(panelBtnUpdate, gbc);
 
         return pnl;
     }
 
     private JTextField buatTextField(String placeholder) {
         JTextField txt = new JTextField();
+        txt.setPreferredSize(new Dimension(0, 35));
         txt.setBackground(COLOR_INPUT_BG);
         txt.setForeground(Color.WHITE);
         txt.setCaretColor(Color.WHITE);
-        txt.setPreferredSize(new Dimension(0, 35));
         txt.setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(COLOR_BORDER),
-                new EmptyBorder(8, 10, 8, 10)));
+                BorderFactory.createLineBorder(COLOR_BORDER),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
         txt.setToolTipText(placeholder);
         return txt;
     }
@@ -200,9 +222,11 @@ public class RestockView extends JPanel {
             return 0; // Kembalikan 0 jika input kosong atau bukan angka
         }
     }
+    
     public String getSupplier() {
         return txtSupplier.getText();
     }
+    
     public Date getTanggalMasuk() {
         return txtTanggalMasuk.getDate();
     }
@@ -261,6 +285,7 @@ public class RestockView extends JPanel {
     public void addUpdateStokListener(ActionListener listener) {
         btnUpdateStok.addActionListener(listener);
     }
+    
     // Tambahkan di bagian paling bawah RestockView.java
     public int getBiayaRestock() {
         try {

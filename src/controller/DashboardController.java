@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 import main.MainFrame;
 import view.DashboardView;
 import view.JasaView;
+import view.LaporanView;
 import view.RestockView;
 import view.SparepartView;
 import view.TransaksiView;
@@ -25,6 +26,8 @@ public class DashboardController {
     private RestockController restockCtrl;
     private SparepartController sparepartCtrl;
     private SparepartView sparepartView;
+    private LaporanView laporanView;
+    private LaporanController laporanCtrl;
     // private SparepartController sparepartCtrl;
     // private RestockController restockCtrl;
     // private LaporanController laporanCtrl;
@@ -48,6 +51,9 @@ public class DashboardController {
         this.sparepartView=new SparepartView();
         this.sparepartCtrl=new SparepartController(sparepartView);
         this.sparepartCtrl.initController();
+        this.laporanView=new LaporanView();
+        this.laporanCtrl=new LaporanController(laporanView);
+        this.laporanCtrl.initController();
         initController();
         
         // 2. Tampilkan menu Transaksi secara otomatis saat Dashboard pertama kali dibuka
@@ -104,7 +110,7 @@ public class DashboardController {
     public void showMenuLaporan() {
         System.out.println("Menampilkan Menu Laporan...");
         view.setTombolAktif(view.getBtnMenuLaporan());
-        // Nanti tambahkan: view.tampilkanViewDiMainContent(laporanView);
+         view.tampilkanViewDiMainContent(laporanView);
     }
 
     // ==========================================
