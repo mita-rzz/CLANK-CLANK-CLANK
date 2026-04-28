@@ -1,8 +1,20 @@
 package view;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class DashboardView extends JPanel {
@@ -15,62 +27,91 @@ public class DashboardView extends JPanel {
     private JButton btnMenuMengisiStock;
     private JButton btnMenuAturSparepart;
     private JButton btnMenuLaporan;
-    private JButton btnLogout; // Tambahan untuk controller
+    private JButton btnLogout; 
     
     private JPanel pnlMainContent;
-    private JButton activeButton; // Menyimpan tombol mana yang sedang aktif
+    private JButton activeButton; 
 
-    // Palet Warna (Disesuaikan dengan LoginView & Screenshot)
-    private final Color COLOR_BG_MAIN = new Color(14, 15, 19);     // Background area kanan (gelap)
-    private final Color COLOR_BG_SIDEBAR = new Color(26, 27, 36);  // Background area kiri (agak terang)
-    private final Color COLOR_TEXT_NORMAL = new Color(150, 150, 150); // Abu-abu
-    private final Color COLOR_TEXT_ACTIVE = new Color(255, 60, 90);   // Pink/Merah aksen
+    // Palet Warna (Disesuaikan dengan Tema Terang / Light Theme)
+    private final Color COLOR_BG_MAIN = new Color(248, 250, 252);     // Background area bawah konten
+    private final Color COLOR_BG_NAVBAR = Color.WHITE;                // Background Navbar atas
+    private final Color COLOR_TEXT_NORMAL = new Color(71, 85, 105);   // Abu-abu untuk menu pasif
+    private final Color COLOR_TEXT_ACTIVE = Color.WHITE;              // Putih untuk teks menu aktif
+    private final Color COLOR_BG_ACTIVE = new Color(58, 176, 255);    // Biru cerah untuk background menu aktif
+    private final Color COLOR_BORDER = new Color(226, 232, 240);      // Garis pembatas bawah navbar
 
     // ==========================================
     // 2. CONSTRUCTOR
     // ==========================================
     public DashboardView() {
-        // Menggunakan BorderLayout: Kiri (WEST) untuk Sidebar, Kanan (CENTER) untuk Konten
         setLayout(new BorderLayout());
         setBackground(COLOR_BG_MAIN);
 
-        // -- MEMBUAT SIDEBAR (KIRI) --
-        JPanel sidebarPanel = new JPanel();
-        sidebarPanel.setPreferredSize(new Dimension(250, 0)); // Lebar sidebar 250px
-        sidebarPanel.setBackground(COLOR_BG_SIDEBAR);
-        sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS)); // Susun vertikal
-        sidebarPanel.setBorder(new EmptyBorder(20, 0, 20, 0)); // Padding atas bawah
+        // -- MEMBUAT NAVBAR (ATAS) --
+        JPanel navbarPanel = new JPanel(new BorderLayout());
+        navbarPanel.setBackground(COLOR_BG_NAVBAR);
+        // Menambahkan border garis di bawah navbar dan padding
+        navbarPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, COLOR_BORDER),
+                new EmptyBorder(10, 24, 10, 24)
+        ));
 
-    
-        sidebarPanel.add(Box.createVerticalStrut(70)); // Spasi kosong di bawah logo
+        // -- BAGIAN KIRI NAVBAR (Judul & Menu) --
+        JPanel pnlKiri = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        pnlKiri.setBackground(COLOR_BG_NAVBAR);
+
+        // Judul / Logo POS
+        JLabel lblTitle = new JLabel("POS Bengkel");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitle.setBorder(new EmptyBorder(0, 0, 0, 20)); // Jarak antara judul dan menu pertama
+        pnlKiri.add(lblTitle);
 
         // Inisialisasi Tombol Menu
-        btnMenuTransaksi = createMenuButton("🛒  Transaksi");
-        btnMenuManipulasiJasa = createMenuButton("📋  Manipulasi Jasa");
-        btnMenuMengisiStock = createMenuButton("📦  Mengisi Stock");
-        btnMenuAturSparepart = createMenuButton("⚙️  Atur Sparepart");
-        btnMenuLaporan = createMenuButton("📈  Laporan Transaksi");
-        
-        // Inisialisasi Tombol Logout (Taruh paling bawah)
-        btnLogout = createMenuButton("🚪  Logout");
+        btnMenuTransaksi = createMenuButton("Transaksi");
+        btnMenuManipulasiJasa = createMenuButton("Jasa");
+        btnMenuMengisiStock = createMenuButton("Isi Stok");
+        btnMenuAturSparepart = createMenuButton("Sparepart");
+        btnMenuLaporan = createMenuButton("Laporan");
 
-        // Memasukkan tombol ke sidebar
-        sidebarPanel.add(btnMenuTransaksi);
-        sidebarPanel.add(btnMenuManipulasiJasa);
-        sidebarPanel.add(btnMenuMengisiStock);
-        sidebarPanel.add(btnMenuAturSparepart);
-        sidebarPanel.add(btnMenuLaporan);
-        
-        sidebarPanel.add(Box.createVerticalGlue()); // Mendorong tombol logout ke ujung bawah
-        sidebarPanel.add(btnLogout);
+        // Memasukkan menu ke panel kiri
+        pnlKiri.add(btnMenuTransaksi);
+        pnlKiri.add(btnMenuManipulasiJasa);
+        pnlKiri.add(btnMenuMengisiStock);
+        pnlKiri.add(btnMenuAturSparepart);
+        pnlKiri.add(btnMenuLaporan);
 
-        // -- MEMBUAT MAIN CONTENT (KANAN) --
+        // -- BAGIAN KANAN NAVBAR (User Info & Logout) --
+        JPanel pnlKanan = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        pnlKanan.setBackground(COLOR_BG_NAVBAR);
+        pnlKanan.setBorder(new EmptyBorder(5, 0, 0, 0)); // Menyelaraskan tinggi dengan teks menu
+
+        JLabel lblAdmin = new JLabel("Administrator");
+        lblAdmin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblAdmin.setForeground(COLOR_TEXT_NORMAL);
+        
+        btnLogout = new JButton("<html>&#10142; Logout</html>"); // Icon panah sederhana
+        btnLogout.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnLogout.setForeground(COLOR_TEXT_NORMAL);
+        btnLogout.setBackground(COLOR_BG_NAVBAR);
+        btnLogout.setBorderPainted(false);
+        btnLogout.setFocusPainted(false);
+        btnLogout.setContentAreaFilled(false); // Menghilangkan background bawaan tombol
+        btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        pnlKanan.add(lblAdmin);
+        pnlKanan.add(btnLogout);
+
+        // Pasang Kiri dan Kanan ke Navbar
+        navbarPanel.add(pnlKiri, BorderLayout.WEST);
+        navbarPanel.add(pnlKanan, BorderLayout.EAST);
+
+        // -- MEMBUAT MAIN CONTENT (BAWAH) --
         pnlMainContent = new JPanel();
         pnlMainContent.setBackground(COLOR_BG_MAIN);
-        pnlMainContent.setLayout(new BorderLayout()); // Menggunakan border layout agar panel anak otomatis full-size
+        pnlMainContent.setLayout(new BorderLayout()); 
 
-        // Memasukkan Sidebar dan Main Content ke layar utama Dashboard
-        add(sidebarPanel, BorderLayout.WEST);
+        // Memasukkan Navbar ke Atas (NORTH) dan Main Content ke Tengah (CENTER)
+        add(navbarPanel, BorderLayout.NORTH);
         add(pnlMainContent, BorderLayout.CENTER);
 
         // Menjadikan menu Transaksi sebagai menu yang aktif pertama kali
@@ -80,21 +121,38 @@ public class DashboardView extends JPanel {
     // ==========================================
     // 3. METHOD BANTUAN UNTUK DESAIN
     // ==========================================
-    // Method untuk mendesain tombol agar flat dan mirip desain web
-    private JButton createMenuButton(String text) {
-        JButton btn = new JButton(text);
-        btn.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+   // ==========================================
+    // 3. METHOD BANTUAN UNTUK DESAIN
+    // ==========================================
+   private JButton createMenuButton(String text) {
+        JButton btn = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Gambar background biru melengkung HANYA jika tombol ini yang sedang aktif
+                if (this == activeButton) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    
+                    g2.setColor(COLOR_BG_ACTIVE); // Gunakan warna biru cerah
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); 
+                    
+                    g2.dispose();
+                }
+                super.paintComponent(g); // Ini yang menggambar teksnya
+            }
+        };
+        
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btn.setForeground(COLOR_TEXT_NORMAL);
-        btn.setBackground(COLOR_BG_SIDEBAR);
+        
+        // MATIKAN background bawaan Java Swing agar tidak jadi kotak kaku
+        btn.setContentAreaFilled(false); 
+        btn.setOpaque(false); // HARUS SELALU FALSE
+        
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
-        btn.setHorizontalAlignment(SwingConstants.LEFT); // Teks rata kiri
-        btn.setMaximumSize(new Dimension(250, 45)); // Ukuran fix untuk BoxLayout
-        btn.setPreferredSize(new Dimension(250, 45));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        // Menambahkan sedikit padding teks ke kiri
-        btn.setBorder(new EmptyBorder(0, 30, 0, 0));
+        btn.setBorder(new EmptyBorder(6, 16, 6, 16));
         
         return btn;
     }
@@ -102,39 +160,34 @@ public class DashboardView extends JPanel {
     // ==========================================
     // 4. METHOD SESUAI STRUKTUR PERMINTAAN
     // ==========================================
-    
-    // Method untuk mengganti isi panel sebelah kanan
     public void tampilkanViewDiMainContent(JPanel viewBaru) {
-        pnlMainContent.removeAll(); // Hapus panel lama
-        pnlMainContent.add(viewBaru, BorderLayout.CENTER); // Pasang panel baru
-        pnlMainContent.revalidate(); // Segarkan struktur layout
-        pnlMainContent.repaint();    // Gambar ulang layar
+        pnlMainContent.removeAll(); 
+        pnlMainContent.add(viewBaru, BorderLayout.CENTER); 
+        pnlMainContent.revalidate(); 
+        pnlMainContent.repaint();    
     }
 
-    // Method untuk mengubah warna tombol yang sedang diklik
     public void setTombolAktif(JButton btn) {
-        // 1. Reset warna tombol yang sebelumnya aktif menjadi normal
+        // 1. Reset teks tombol yang sebelumnya aktif menjadi abu-abu
         if (activeButton != null) {
             activeButton.setForeground(COLOR_TEXT_NORMAL);
-            activeButton.setBackground(COLOR_BG_SIDEBAR); // Warna background asli
         }
 
-        // 2. Set warna tombol yang baru diklik menjadi aktif (Aksen pink/merah)
+        // 2. Set teks tombol yang baru diklik menjadi putih
         btn.setForeground(COLOR_TEXT_ACTIVE);
-        // (Opsional) Jika ingin backgroundnya sedikit lebih gelap saat aktif:
-        // btn.setBackground(new Color(20, 21, 28)); 
         
         // 3. Simpan tombol ini sebagai tombol aktif saat ini
         activeButton = btn;
+        
+        // 4. Refresh layar agar Java menggambar ulang background birunya di tombol yang baru
+        repaint(); 
     }
 
-    // Method untuk menampilkan pop-up pesan
     public void tampilkanPesan(String pesan) {
         JOptionPane.showMessageDialog(this, pesan);
     }
 
-    // (Opsional) Method Listener bawaan dari permintaanmu 
-    // Walaupun Controller milikmu menggunakan getter secara langsung, ini saya buatkan sesuai request
+    // Listener
     public void addMenuTransaksiListener(ActionListener listener) { btnMenuTransaksi.addActionListener(listener); }
     public void addMenuManipulasiJasaListener(ActionListener listener) { btnMenuManipulasiJasa.addActionListener(listener); }
     public void addMenuMengisiStockListener(ActionListener listener) { btnMenuMengisiStock.addActionListener(listener); }
@@ -145,8 +198,8 @@ public class DashboardView extends JPanel {
     // 5. GETTER UNTUK CONTROLLER
     // ==========================================
     public JButton getBtnMenuTransaksi() { return btnMenuTransaksi; }
-    public JButton getBtnMenuJasa() { return btnMenuManipulasiJasa; } // Disesuaikan dengan nama di Controller
-    public JButton getBtnMenuRestock() { return btnMenuMengisiStock; } // Disesuaikan dengan nama di Controller
+    public JButton getBtnMenuJasa() { return btnMenuManipulasiJasa; } 
+    public JButton getBtnMenuRestock() { return btnMenuMengisiStock; } 
     public JButton getBtnMenuSparepart() { return btnMenuAturSparepart; }
     public JButton getBtnMenuLaporan() { return btnMenuLaporan; }
     public JButton getBtnLogout() { return btnLogout; }
